@@ -18,7 +18,9 @@ void ActivityMonitor::update() {
   distance.previousLocation = currentLocation;
 
 }
+void ActivityMonitor::begin() {
 
+}
 // Position Module Implementation
 double Location::latitude() {
   //return Utilities::formatNumber(gps.location.lat(), 2, 7);

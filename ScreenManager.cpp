@@ -4,7 +4,11 @@
 void ScreenManager::draw() {
   drawTabs();
   drawScreen();
-  drawBlinker();
+  //drawBlinker();
+}
+void ScreenManager::update() {
+  draw();
+  display.display();
 }
 void ScreenManager::drawTabs() {
   for (int8_t i = 0; i < numberOfScreens; i++) {
@@ -20,14 +24,10 @@ void ScreenManager::drawScreen() {
 }
 void ScreenManager::drawBlinker() {
   Serial.println("Free Memory: " + String(Utilities::freeMemory()));
-  Serial.println("111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
-  display.drawRect(110, 0, 10, 10, 0);
-  Serial.println("222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222");
-  display.drawRect(112, 1, 14, 14, 0);
-  Serial.println("333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333");
+  //display.drawRect(111, 1, 16, 16, 1);
+  //display.drawRect(111, 1, 14, 14, 0);
   if((millis() / 1000) % 2 == 0) {
-    display.fillRect(113, 2, 12, 12, 0);
-
+    display.fillRect(113, 2, 12, 12, 1); // SSD1306_WHITE
   } else {
     display.fillRect(113, 2, 12, 12, 0); // SSD1306_BLACK
   }

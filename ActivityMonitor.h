@@ -109,6 +109,7 @@ public:
   Timer timer;
   Date date;
   void update(); // Updates all the values
+  void begin();
 };
 
 #endif
