@@ -2,6 +2,7 @@
 TODO:
   Figure out how to allow ValueDisplay to take pointers to other objects
   Implement terminal logging system for terminal using a .log file
+  Simplify terminal.println() and sm.update() to one line
 */
 /*
 WIRING:
@@ -37,6 +38,7 @@ WIRING:
 #include "TerminalDisplay.h"
 #include "ValueDisplay.h"
 #include "ScreenManager.h"
+
 // Constants
 const int LOOP_INTERVAL = 1000;
 // OLED Screen
@@ -59,77 +61,85 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   while (!Serial || !Serial1);
-  terminal.println("Serial  - Successful");
-  Serial.println("Serial  - Successful");
+  Serial.println("Serial    - Successful");
+  terminal.println("Serial    - Successful");
 
 // OLED
-  terminal.print("OLED    - ");
-  Serial.print("OLED    - ");
+  Serial.print("OLED      - ");
+  terminal.print("OLED      - ");
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println("Failed");
     terminal.println("Failed");
+    while(true);
+  }
+  display.clearDisplay();
+
+  sm.addScreen(&terminal);
+  Serial.println("Successful");
+  terminal.println("Successful");sm.update();
+
+// SD Card
+  terminal.print("SD Card   - ");
+  Serial.print("SD Card   - ");
+  if (!SD.begin(CHIP_SELECT)) {
+    terminal.println("Failed");
+    sm.update();
     Serial.println("Failed");
     while(true);
   }
-  sm.addScreen(&terminal);
-  terminal.println("Successful");
   Serial.println("Successful");
-  display.clearDisplay();
-  display.display();
-  sm.update();
-  //display.display();
-// SD Card
-  terminal.print("SD Card - ");
-  //Serial.print("SD Card - ");
-  if (!SD.begin(CHIP_SELECT)) {
-    terminal.println("Failed");
-    //Serial.println("Failed");
-    while(true);
-  }
-  terminal.println("Successful");
+  terminal.println("Successful");sm.update();
 
+// GPS
+  Serial.print("GPS - "); 
+  terminal.print("GPS - ");sm.update();
+  bool timeFlag = false;
+  bool positionFlag = false;
+  while (true) {
+    unsigned long start = millis();
+    do {
+      while (Serial1.available()) {
+        gps.encode(Serial1.read());
+      }
+    } while (millis()   - start < 1000);
+    if (!timeFlag && Utilities::formatDate(gps.date) != "00-00-2000" && Utilities::formatTime(gps.time) != "00:00:00") {
+      timeFlag = true;
+      Serial.print("DT"); // Synced (D)ate and (T)ime
+      terminal.print("DT");sm.update();
+    }
+    if (!positionFlag && gps.location.isValid() && gps.altitude.isValid()) {
+      positionFlag = true;
+      Serial.print("P"); // Synced (P)osition
+      terminal.print("P");sm.update();
+    }
+    if (timeFlag && positionFlag) {
+      break;
+    }
+  }
+  //previousLocation = gps.location;
+  //previousTime = gps.time;
+  Serial.println(" - Successful");
+  terminal.println(" - Succesful");sm.update();
+  vd.addValue("Time", &ValueDisplay::gettimeofdayseconds);
+  vd.addValue("Lat", &ValueDisplay::getlatitude);
+  vd.addValue("Lng", &ValueDisplay::getlongitude);
+  vd.am.begin();
+  sm.addScreen(&vd);
+  sm.update();
+  delay(2000);
+  sm.switchScreen(1);
+  sm.update();
   
-  //vd.addValue("Time", &ValueDisplay::gettimeofdayseconds); // Is it really a problem?
-  //sm.addScreen(&vd);
-  delay(10000);
 }
 void loop() {
-  terminal.println(String(millis() / 1000));
-  sm.draw();
-  display.display();
-  delay(1000);
+  unsigned long start = millis();
+  do {
+    while (Serial1.available()) {
+      gps.encode(Serial1.read());
+    }
+  } while (millis() - start < LOOP_INTERVAL);
+  vd.am.update();
+  //terminal.println(Utilities::formatNumber(gps.location.lat(), 2, 7) + ", " + Utilities::formatNumber(gps.location.lng(), 2, 7));
+  //terminal.println(Utilities::formatTime(gps.time));
+  sm.update();
 }
-// Output variables
-/*
-void setup() {
-  // LEDS
-  pinMode(47, OUTPUT); // For GPS power
-  digitalWrite(47, HIGH);
-  pinMode(45, OUTPUT); // For OLED power
-  digitalWrite(45, HIGH);
-  pinMode(LED_BUILTIN, OUTPUT);// For LED
-
-// Setting up the Serial
-  Serial.begin(9600);   // The Serial port of Arduino baud rate.
-  delay(1000);
-  Serial.println("\n\n");
-// Setting up the OLED
-  Serial.print("Step 1");
-  if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-    Serial.println("Failed OLED allocation");
-    while(true);
-  }
-  Serial.println("Step 2");
-}
-
-void loop () {
-  display.clearDisplay();
-  String val = String(millis() / 1000);
-  terminal.println(val);
-  Serial.println(val);
-  terminal.draw();
-  terminal.drawTab(1, true);
-  
-  display.display();
-  delay(1000);
-}
-*/

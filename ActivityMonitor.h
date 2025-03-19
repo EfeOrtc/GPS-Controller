@@ -22,7 +22,7 @@ private:
   TinyGPSPlus& gps;
   double& totalDistance;
   TinyGPSTime& startTime;
-  double previousSpeeds[10] = {0};
+  double previousSpeeds[10];
   double maxSpeedkmph;
 public:
   Speed(TinyGPSPlus& gps, double& totalDistance, TinyGPSTime& startTime) : gps(gps), totalDistance(totalDistance), startTime(startTime), maxSpeedkmph(0), previousSpeeds({0}) {}
@@ -89,7 +89,7 @@ struct Date {
 private:
   TinyGPSPlus& gps;
 public:
-  Date(TinyGPSPlus gps) : gps(gps) {}
+  Date(TinyGPSPlus& gps) : gps(gps) {}
   String date();
   String timeofday();
   String timeofdayseconds();

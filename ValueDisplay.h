@@ -6,12 +6,12 @@
 #include "ActivityMonitor.h"
 class ValueDisplay : public Screen {
 private:
-  ActivityMonitor am;
   String titles[6]; // Holds the titles, 0th index is drawn at the top
   String (ValueDisplay::*values[6])(); // Holds the function pointers
   uint8_t numValues; // Current number of values
 public:
-  ValueDisplay(Adafruit_SSD1306& display, TinyGPSPlus gps) : Screen(display, "DIS"), am(gps), numValues(0), titles({""}), values({nullptr}) {}
+  ActivityMonitor am;
+  ValueDisplay(Adafruit_SSD1306& display, TinyGPSPlus& gps) : Screen(display, "DIS"), am(gps), numValues(0), titles({""}), values({nullptr}) {}
   void draw() override;
   void addValue(String title, String (ValueDisplay::*value)()); // Inserts the title and value at the end
   void addValue(String title, String (ValueDisplay::*value)(), uint8_t index); // Inserts the title and value at the given index

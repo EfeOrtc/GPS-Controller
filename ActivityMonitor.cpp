@@ -19,7 +19,8 @@ void ActivityMonitor::update() {
 
 }
 void ActivityMonitor::begin() {
-
+  timer.startTime = gps.time;
+  
 }
 // Position Module Implementation
 double Location::latitude() {
