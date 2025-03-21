@@ -26,6 +26,7 @@ void ValueDisplay::removeValue(uint8_t index) {
     values[numValues] = nullptr;
   }
 }
+
 /*
 ValueDisplay::ValueDisplay(Adafruit_SSD1306& display, TinyGPSPlus gps) : Screen(display, "DIS"), am(gps) { // titles is the titles, delimited by a comma
   int8_t numTitles = 0;
@@ -154,27 +155,34 @@ String ValueDisplay::getrollingspeedmph () {
   return Utilities::formatNumber(am.speed.rollingspeedmph(), -1, 2);
 }
 String ValueDisplay::getaveragepaceminpkm () {
-  return am.speed.averagepaceminpkm();
+  double pace = am.speed.averagepaceminpkm();
+  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getaveragepaceminpmi () {
-  return am.speed.averagepaceminpmi();
+  double pace = am.speed.averagepaceminpmi();
+  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getpaceminpkm () {
-  return am.speed.paceminpkm();
+  double pace = am.speed.paceminpkm();
+  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getpaceminpmi () {
-  return am.speed.paceminpmi();
+  double pace = am.speed.paceminpmi();
+  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getrollingpaceminpkm () {
-  return am.speed.rollingpaceminpkm();
+  double pace = am.speed.rollingpaceminpkm();
+  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getrollingpaceminpmi () {
-  return am.speed.rollingpaceminpmi();
+  double pace = am.speed.rollingpaceminpkm();
+  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getdistancekm () {
   return Utilities::formatNumber(am.distance.distancekm(), -1, 2);
 }
 String ValueDisplay::getdistancemi () {
+  Serial.println(String(am.distance.distancemi(), 2));
   return Utilities::formatNumber(am.distance.distancemi(), -1, 2);
 }
 String ValueDisplay::getheading () {
@@ -184,7 +192,7 @@ String ValueDisplay::getelevation () {
   return Utilities::formatNumber(am.elevation.elevation(), -1, 2);
 }
 String ValueDisplay::getelapsedtime () {
-  int elapsedTime = am.timer.elapsedtime();
+  int elapsedTime = am.timer.elapsedtime(); // In seconds
   String output = Utilities::formatNumber(elapsedTime / 3600, 2, 0) + ":";
   elapsedTime %= 3600;
   output += Utilities::formatNumber(elapsedTime / 60, 2, 0) + ":";
@@ -193,11 +201,12 @@ String ValueDisplay::getelapsedtime () {
   return output;
 }
 String ValueDisplay::getdate () {
-  return am.date.date();
+  return Utilities::formatDate(am.date.date());
 }
 String ValueDisplay::gettimeofday () {
-  return am.date.timeofday();
+  return Utilities::formatTime(am.date.time()).substring(0, 5);
 }
-String ValueDisplay::gettimeofdayseconds () {
-  return am.date.timeofdayseconds();
+String ValueDisplay::gettimeofdayseconds() {
+  TinyGPSTime time = am.date.time();
+  return Utilities::formatTime(am.date.time());
 }

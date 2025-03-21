@@ -3,6 +3,7 @@ TODO:
   Figure out how to allow ValueDisplay to take pointers to other objects
   Implement terminal logging system for terminal using a .log file
   Simplify terminal.println() and sm.update() to one line
+  Add a logbook at the end for max speed and such
 */
 /*
 WIRING:
@@ -23,10 +24,6 @@ WIRING:
     MOSI -> 50 (Not sure why) (SDO)
     CLK  -> 52 (Not sure why)
     CS   -> 8 (Defined in code as CHIP_SELECT)
-    
-
-
-
 */
 #include <TinyGPSPlus.h>
 #include <Arduino.h>
@@ -61,7 +58,8 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   while (!Serial || !Serial1);
-  Serial.println("Serial    - Successful");
+  Serial.println(Utilities::formatNumber(0, -1, 2));
+  Serial.println("\n\nSerial    - Successful");
   terminal.println("Serial    - Successful");
 
 // OLED
@@ -120,10 +118,22 @@ void setup() {
   //previousTime = gps.time;
   Serial.println(" - Successful");
   terminal.println(" - Succesful");sm.update();
-  vd.addValue("Time", &ValueDisplay::gettimeofdayseconds);
-  vd.addValue("Lat", &ValueDisplay::getlatitude);
-  vd.addValue("Lng", &ValueDisplay::getlongitude);
+  //vd.addValue("Time", &ValueDisplay::gettimeofdayseconds);
+  //vd.addValue("Lat", &ValueDisplay::getlatitude);
+  //vd.addValue("Lng", &ValueDisplay::getlongitude);
+  //vd.addValue("MPH", &ValueDisplay::getspeedmph);
+  //vd.addValue("Pace", &ValueDisplay::getpaceminpmi);
+  vd.addValue("Time (elap)", &ValueDisplay::getelapsedtime);
+  vd.addValue("Distance", &ValueDisplay::getdistancemi);
+  vd.addValue("Avg. Pace", &ValueDisplay::getaveragepaceminpmi);
+  vd.addValue("Avg. Speed", &ValueDisplay::getaveragespeedmph);
+  vd.addValue("Speed (rol)", &ValueDisplay::getrollingspeedmph);
+  vd.addValue("Elevation", &ValueDisplay::getelevation);
+  Serial.print("File      - ");
+  terminal.print("File      - ");sm.update();
   vd.am.begin();
+  Serial.println(vd.am.getFileName());
+  terminal.println(vd.am.getFileName());sm.update();
   sm.addScreen(&vd);
   sm.update();
   delay(2000);
@@ -139,6 +149,7 @@ void loop() {
     }
   } while (millis() - start < LOOP_INTERVAL);
   vd.am.update();
+  vd.am.printGPXtrkpt();
   //terminal.println(Utilities::formatNumber(gps.location.lat(), 2, 7) + ", " + Utilities::formatNumber(gps.location.lng(), 2, 7));
   //terminal.println(Utilities::formatTime(gps.time));
   sm.update();

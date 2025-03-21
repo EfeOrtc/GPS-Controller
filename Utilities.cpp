@@ -1,6 +1,6 @@
 #include "Utilities.h"
 // Formatting functions
-String Utilities::formatNumber(double number, uint8_t wholeDigits, uint8_t decimalDigits, bool sign) {
+String Utilities::formatNumber(double number, int8_t wholeDigits, int8_t decimalDigits, bool sign) {
   if (sign) {
     String output = formatNumber(abs(number), wholeDigits, decimalDigits);
     if (number < 0) {
@@ -12,7 +12,7 @@ String Utilities::formatNumber(double number, uint8_t wholeDigits, uint8_t decim
     return Utilities::formatNumber(number, wholeDigits, decimalDigits);
   }
 }
-String Utilities::formatNumber(double number, uint8_t wholeDigits, uint8_t decimalDigits) {
+String Utilities::formatNumber(double number, int8_t wholeDigits, int8_t decimalDigits) {
   String output = String((int)floor(abs(number)));
   if (number < 0) {
     output = "-" + output;
@@ -27,20 +27,20 @@ String Utilities::formatNumber(double number, uint8_t wholeDigits, uint8_t decim
   output += String(number, decimalDigits).substring(String(number, decimalDigits).indexOf("."));
   return output;
 }
-String Utilities::formatDate(TinyGPSDate &date) {  // 00-00-0000
+String Utilities::formatDate(const TinyGPSDate &date) {  // 00-00-0000
   return Utilities::formatNumber(date.month(), 2, 0) + "-" + Utilities::formatNumber(date.day(), 2, 0) + "-" + Utilities::formatNumber(date.year(), 4, 0);
 }
-String Utilities::formatTime(TinyGPSTime &time) {  //00:00:00
+String Utilities::formatTime(const TinyGPSTime &time) {  //00:00:00
   return Utilities::formatNumber(time.hour(), 2, 0) + ":" + Utilities::formatNumber(time.minute(), 2, 0) + ":" + Utilities::formatNumber(time.second(), 2, 0);  // + "." + Utilities::formatNumber(time.centisecond(), 2, 0);
 }
-String Utilities::formatDateTime(TinyGPSDate &date, TinyGPSTime &time) {  //00-00-0000-00:00:00
+String Utilities::formatDateTime(const TinyGPSDate &date, const TinyGPSTime &time) {  //00-00-0000-00:00:00
   return Utilities::formatDate(date) + "-" + Utilities::formatTime(time);
 }
-String Utilities::formatDateTimeISO8601(TinyGPSDate &date, TinyGPSTime &time) {
+String Utilities::formatDateTimeISO8601(const TinyGPSDate &date, const TinyGPSTime &time) {
   return Utilities::formatNumber(date.year(), 4, 0) + "-" + Utilities::formatNumber(date.month(), 2, 0) + "-" + Utilities::formatNumber(date.day(), 2, 0) + "T" + Utilities::formatTime(time) + "Z";
 }
 
-void Utilities::printToFile(String output, String &fileName) {
+void Utilities::printToFile(const String output, String &fileName) {
   File dataFile = SD.open(fileName, FILE_WRITE);
   // if the file is available, write to it:
   if (dataFile) {
@@ -50,10 +50,10 @@ void Utilities::printToFile(String output, String &fileName) {
   }
   dataFile.close();
 }
-void Utilities::printlnToFile(String output, String &fileName) {
+void Utilities::printlnToFile(const String output, String &fileName) {
   Utilities::printToFile(output + "\n", fileName);
 }
-String Utilities::getGPXtrkpt(TinyGPSDate &date, TinyGPSTime &time, TinyGPSLocation &location, TinyGPSAltitude &altitude) {
+String Utilities::getGPXtrkpt(const TinyGPSDate &date, const TinyGPSTime &time, const TinyGPSLocation &location, const TinyGPSAltitude &altitude) {
   String output = "   <trkpt lat=\"" + Utilities::formatNumber(location.lat(), 2, 7) + "\" lon=\"" + Utilities::formatNumber(location.lng(), 2, 7) + "\">\n";
   output += "    <ele>" + Utilities::formatNumber(altitude.meters(), 0, 1) + "</ele>\n";
   output += "    <time>" + Utilities::formatDateTimeISO8601(date, time) + "</time>\n";
@@ -61,10 +61,10 @@ String Utilities::getGPXtrkpt(TinyGPSDate &date, TinyGPSTime &time, TinyGPSLocat
   return output;
 }
 // Calculation functions
-double Utilities::timeBetween(TinyGPSTime &time, TinyGPSTime &previousTime) {
-  return (((previousTime.hour() * 360000 + previousTime.minute() * 6000 + previousTime.second() * 100 + previousTime.centisecond()) - (time.hour() * 360000 + time.minute() * 6000 + time.second() * 100 + time.centisecond()) + 8640000) % 8640000) / 100.0;
+double Utilities::timeBetween(const TinyGPSTime &time, const TinyGPSTime &previousTime) {
+  return (((time.hour() * 3600 + time.minute() * 60 + time.second()) - (previousTime.hour() * 3600 + previousTime.minute() * 60 + previousTime.second())) + 8640000) % 8640000;
 }
-double Utilities::degreesToRadians(double degrees) {
+double Utilities::degreesToRadians(const double degrees) {
   return degrees * (M_PI / 180);
 }
 int Utilities::freeMemory() {
