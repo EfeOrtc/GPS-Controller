@@ -156,27 +156,27 @@ String ValueDisplay::getrollingspeedmph () {
 }
 String ValueDisplay::getaveragepaceminpkm () {
   double pace = am.speed.averagepaceminpkm();
-  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
+  return Utilities::formatNumber(pace, -1, 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getaveragepaceminpmi () {
   double pace = am.speed.averagepaceminpmi();
-  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
+  return Utilities::formatNumber(pace, -1, 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getpaceminpkm () {
   double pace = am.speed.paceminpkm();
-  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
+  return Utilities::formatNumber(pace, -1, 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getpaceminpmi () {
   double pace = am.speed.paceminpmi();
-  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
+  return Utilities::formatNumber(pace, -1, 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getrollingpaceminpkm () {
   double pace = am.speed.rollingpaceminpkm();
-  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
+  return Utilities::formatNumber(pace, -1, 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getrollingpaceminpmi () {
   double pace = am.speed.rollingpaceminpkm();
-  return String(floor(pace), 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
+  return Utilities::formatNumber(pace, -1, 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getdistancekm () {
   return Utilities::formatNumber(am.distance.distancekm(), -1, 2);

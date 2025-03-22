@@ -162,7 +162,7 @@ public:
   Timer timer;
   Date date;
   void update(); // Updates all the values
-  void begin();
+  void begin(String fileName);
   void printGPXStart();
   void printGPXtrkpt();
   String getFileName() {return fileName;}

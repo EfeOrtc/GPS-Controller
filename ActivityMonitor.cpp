@@ -10,12 +10,10 @@ void ActivityMonitor::update() {
   timer.update();
   date.update();
 }
-void ActivityMonitor::begin() {
+void ActivityMonitor::begin(String fileNameGPX) {
+  fileName = fileNameGPX;
   timer.startTime = gps.time;
   distance.previousLocation = gps.location;
-  fileName = Utilities::formatNumber(gps.date.month(), 2, 0) + Utilities::formatNumber(gps.date.day(), 2, 0) + Utilities::formatNumber(gps.time.hour(), 2, 0) + Utilities::formatNumber(gps.time.minute(), 2, 0) + ".gpx";
-  File dataFile = SD.open(fileName, FILE_WRITE);
-  dataFile.close();
   printGPXStart();
   update();
 }
