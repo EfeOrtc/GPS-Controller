@@ -129,8 +129,9 @@ void setup() {
   vd.addValue("Time Passed", &ValueDisplay::getelapsedtime);
   vd.addValue("   Distance", &ValueDisplay::getdistancemi);
   vd.addValue("  Avg. Pace", &ValueDisplay::getaveragepaceminpmi);
-  vd.addValue("Roll.  Pace", &ValueDisplay::getrollingpaceminpmi);
-  //vd.addValue("  Elevation", &ValueDisplay::getelevation);
+  vd.addValue(" Roll. Pace", &ValueDisplay::getrollingpaceminpmi);
+  vd.addValue(" Avg. Speed", &ValueDisplay::getaveragespeedmph);
+  vd.addValue("Roll. Speed", &ValueDisplay::getrollingspeedmph);
 
 // File
   Serial.print("File - ");
@@ -184,8 +185,5 @@ void loop() {
   } while (millis() - start < LOOP_INTERVAL);
   vd.am.update();
   vd.am.printGPXtrkpt();
-  //terminal.println(Utilities::formatNumber(gps.location.lat(), 2, 7) + ", " + Utilities::formatNumber(gps.location.lng(), 2, 7));
-  //terminal.println(Utilities::formatTime(gps.time));
-  Utilities::printlnToFile(vd.getdistancemi(), folderName + "/distance.txt");
   sm.update();
 }

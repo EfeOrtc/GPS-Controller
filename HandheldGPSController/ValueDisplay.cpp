@@ -179,11 +179,11 @@ String ValueDisplay::getrollingpaceminpmi () {
   return Utilities::formatNumber(pace, -1, 0) + ":" + Utilities::formatNumber((pace - floor(pace)) * 60, 2, 0);
 }
 String ValueDisplay::getdistancekm () {
-  return Utilities::formatNumber(am.distance.distancekm(), -1, 4);
+  return Utilities::formatNumber(am.distance.distancekm(), -1, 2);
 }
 String ValueDisplay::getdistancemi () {
   Serial.println(String(am.distance.distancemi(), 2));
-  return Utilities::formatNumber(am.distance.distancemi(), -1, 4);
+  return Utilities::formatNumber(am.distance.distancemi(), -1, 2);
 }
 String ValueDisplay::getheading () {
   return Utilities::formatNumber(am.navigation.heading(), -1, 2);
