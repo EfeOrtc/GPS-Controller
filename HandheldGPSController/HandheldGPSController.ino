@@ -146,7 +146,7 @@ void setup() {
   fileNameGPX = folderName + "/route.gpx";
   SD.open(fileNameGPX, FILE_WRITE).close();
   //SD.open(folderName + "/terminal.log", FILE_WRITE).close();
-  //SD.open(folderName + "/notes.txt", FILE_WRITE).close();
+  SD.open(folderName + "/distance.txt", FILE_WRITE).close();
   Serial.print("F - ");
   terminal.print("F - ");sm.update();
   Serial.println(folderName);
@@ -186,5 +186,6 @@ void loop() {
   vd.am.printGPXtrkpt();
   //terminal.println(Utilities::formatNumber(gps.location.lat(), 2, 7) + ", " + Utilities::formatNumber(gps.location.lng(), 2, 7));
   //terminal.println(Utilities::formatTime(gps.time));
+  Utilities::printlnToFile(vd.getdistancemi(), folderName + "/distance.txt");
   sm.update();
 }
