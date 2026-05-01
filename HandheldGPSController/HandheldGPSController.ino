@@ -69,7 +69,7 @@ void setup() {
   Serial.println("\n\nSerial    - Done");
   terminal.println("Serial    - Done");
 
-// OLED
+// OLED (screen)
   Serial.print("OLED      - ");
   terminal.print("OLED      - ");
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -171,18 +171,22 @@ void setup() {
     Serial.print("-" + String((25 - (i * 5))));
     terminal.print("-" + String((25 - (i * 5))));sm.update();
   }
+  // Starting the activity recording
   vd.am.begin(fileNameGPX);
+  // Switching the screen from the Terminal (0) to the Value Display (1)
   sm.switchScreen(1);
   sm.update();
   
 }
 void loop() {
   unsigned long start = millis();
+  // Records data into the gps continuously for 1000ms
   do {
     while (Serial1.available()) {
       gps.encode(Serial1.read());
     }
   } while (millis() - start < LOOP_INTERVAL);
+  // Updates the activity monitor and prints a trkpt to the GPX file
   vd.am.update();
   vd.am.printGPXtrkpt();
   sm.update();
